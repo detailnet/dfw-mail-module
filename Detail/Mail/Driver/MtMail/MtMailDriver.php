@@ -1,7 +1,8 @@
 <?php
 
-namespace Detail\Mail\Driver;
+namespace Detail\Mail\Driver\MtMail;
 
+use Detail\Mail\Driver\DriverInterface;
 use Detail\Mail\Message\MessageInterface;
 
 use MtMail\Service\Mail as MtMail;

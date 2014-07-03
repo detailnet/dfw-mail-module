@@ -2,6 +2,8 @@
 
 namespace Detail\Mail\Message;
 
+use InvalidArgumentException;
+
 class Message
     implements MessageInterface
 {
@@ -25,15 +27,18 @@ class Message
      */
     protected $variables = array();
 
-    public static function fromArray(array $message)
-    {
-        return new static(
-            $message['id'],
-            $message['name'],
-            $message['headers'],
-            $message['variables']
-        );
-    }
+//    public static function fromArray(array $message)
+//    {
+//        var_dump($message);
+//        exit;
+//
+//        return new static(
+//            $message['id'],
+//            $message['name'],
+//            $message['headers'],
+//            $message['variables']
+//        );
+//    }
 
     /**
      * @return Id
@@ -83,10 +88,28 @@ class Message
         $this->variables = $variables;
     }
 
-    public function __construct(Id $id, $name, array $headers = array(), array $variables = array())
+    /**
+     * @param $id
+     * @param $name
+     * @param array $headers
+     * @param array $variables
+     * @throws InvalidArgumentException
+     */
+    public function __construct($id, $name, array $headers = array(), array $variables = array())
     {
+        if (is_string($id)) {
+            $id = new Id($id);
+        } else if (!$id instanceof Id) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Provided ID must be a string or Detail\Mail\Message\Id object; %s given',
+                    is_object($id) ? get_class($id) : gettype($id)
+                )
+            );
+        }
+
         $this->id = $id;
-        $this->$name = $name;
+        $this->name = $name;
 
         $this->setHeaders($headers);
         $this->setVariables($variables);
@@ -95,13 +118,13 @@ class Message
     /**
      * @return array
      */
-    public function toArray()
-    {
-        return array(
-            'id' => $this->getId(),
-            'name' => $this->getName(),
-            'headers' => $this->getHeaders(),
-            'variables' => $this->getVariables()
-        );
-    }
+//    public function toArray()
+//    {
+//        return array(
+//            'id' => $this->getId()->getValue(),
+//            'name' => $this->getName(),
+//            'headers' => $this->getHeaders(),
+//            'variables' => $this->getVariables()
+//        );
+//    }
 }

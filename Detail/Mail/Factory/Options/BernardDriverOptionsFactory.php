@@ -5,7 +5,7 @@ namespace Detail\Mail\Factory\Options;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-use Detail\Mail\Options\MtMailDriverOptions;
+use Detail\Mail\Options\BernardDriverOptions;
 
 use RuntimeException;
 
@@ -13,7 +13,7 @@ class BernardDriverOptionsFactory implements FactoryInterface
 {
     /**
      * {@inheritDoc}
-     * @return MtMailDriverOptions
+     * @return BernardDriverOptions
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
@@ -25,6 +25,6 @@ class BernardDriverOptionsFactory implements FactoryInterface
             throw new RuntimeException('Config for driver Detail\Mail\Driver\BernardDriver is not set');
         }
 
-        return new MtMailDriverOptions($drivers['bernard']);
+        return new BernardDriverOptions($drivers['bernard']);
     }
 }

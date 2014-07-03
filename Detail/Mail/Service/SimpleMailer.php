@@ -3,6 +3,7 @@
 namespace Detail\Mail\Service;
 
 use Detail\Mail\Driver\DriverInterface;
+use Detail\Mail\Message\MessageFactoryInterface;
 use Detail\Mail\Message\MessageInterface;
 
 class SimpleMailer extends AbstractMailer
@@ -11,11 +12,6 @@ class SimpleMailer extends AbstractMailer
      * @var DriverInterface
      */
     protected $driver;
-
-    public function __construct(DriverInterface $driver)
-    {
-        $this->setDriver($driver);
-    }
 
     /**
      * @return DriverInterface
@@ -31,6 +27,17 @@ class SimpleMailer extends AbstractMailer
     public function setDriver(DriverInterface $driver)
     {
         $this->driver = $driver;
+    }
+
+    /**
+     * @param DriverInterface $driver
+     * @param MessageFactoryInterface $messageFactory
+     */
+    public function __construct(DriverInterface $driver, MessageFactoryInterface $messageFactory)
+    {
+        parent::__construct($messageFactory);
+
+        $this->setDriver($driver);
     }
 
     /**

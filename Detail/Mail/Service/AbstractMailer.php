@@ -2,7 +2,6 @@
 
 namespace Detail\Mail\Service;
 
-use Detail\Mail\Message\MessageFactory;
 use Detail\Mail\Message\MessageFactoryInterface;
 use Detail\Mail\Message\MessageInterface;
 
@@ -19,10 +18,6 @@ abstract class AbstractMailer implements
      */
     public function getMessageFactory()
     {
-        if ($this->messageFactory === null) {
-            $this->setMessageFactory(new MessageFactory());
-        }
-
         return $this->messageFactory;
     }
 
@@ -35,6 +30,14 @@ abstract class AbstractMailer implements
     }
 
     /**
+     * @param MessageFactoryInterface $messageFactory
+     */
+    public function __construct(MessageFactoryInterface $messageFactory)
+    {
+        $this->setMessageFactory($messageFactory);
+    }
+
+    /**
      * @param string $name
      * @param array $headers Message headers
      * @param array $variables
@@ -42,6 +45,6 @@ abstract class AbstractMailer implements
      */
     public function compose($name, array $headers = array(), array $variables = array())
     {
-        return $this->getMessageFactory()->createMessage($name, $headers, $variables);
+        return $this->getMessageFactory()->createNew($name, $headers, $variables);
     }
 }

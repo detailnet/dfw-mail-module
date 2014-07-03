@@ -5,7 +5,7 @@ namespace Detail\Mail\Factory\Driver;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-use Detail\Mail\Driver\MtMailDriver;
+use Detail\Mail\Driver\MtMail\MtMailDriver;
 
 class MtMailDriverFactory implements FactoryInterface
 {

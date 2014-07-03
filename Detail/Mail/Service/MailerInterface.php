@@ -7,6 +7,11 @@ use Detail\Mail\Message\MessageInterface;
 interface MailerInterface
 {
     /**
+     * @return \Detail\Mail\Message\MessageFactoryInterface
+     */
+    public function getMessageFactory();
+
+    /**
      * @param string $name
      * @param array $headers Message headers
      * @param array $variables

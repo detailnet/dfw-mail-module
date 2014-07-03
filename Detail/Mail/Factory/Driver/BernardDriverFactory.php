@@ -5,7 +5,7 @@ namespace Detail\Mail\Factory\Driver;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-use Detail\Mail\Driver\BernardDriver;
+use Detail\Mail\Driver\Bernard\BernardDriver;
 
 class BernardDriverFactory implements FactoryInterface
 {
@@ -18,10 +18,10 @@ class BernardDriverFactory implements FactoryInterface
         /** @var \Detail\Mail\Options\BernardDriverOptions $options */
         $options = $serviceLocator->get('Detail\Mail\Options\BernardDriverOptions');
 
-        /** @var \Bernard\Producer $producer */
-        $producer = $serviceLocator->get($options->getProducer());
+        /** @var \Detail\Mail\Driver\Bernard\BernardService $bernardService */
+        $bernardService = $serviceLocator->get('Detail\Mail\Driver\Bernard\BernardService');
 
-        $driver = new BernardDriver($producer);
+        $driver = new BernardDriver($bernardService);
         $driver->setQueueName($options->getQueueName());
 
         return $driver;

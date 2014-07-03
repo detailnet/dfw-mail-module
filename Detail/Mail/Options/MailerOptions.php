@@ -10,6 +10,11 @@ class MailerOptions extends AbstractOptions
     protected $driver = 'Detail\Mail\Driver\MtMailDriver';
 
     /**
+     * @var string
+     */
+    protected $messageFactory = 'Detail\Mail\Message\MessageFactory';
+
+    /**
      * @return string
      */
     public function getDriver()
@@ -23,5 +28,21 @@ class MailerOptions extends AbstractOptions
     public function setDriver($driver)
     {
         $this->driver = $driver;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMessageFactory()
+    {
+        return $this->messageFactory;
+    }
+
+    /**
+     * @param string $messageFactory
+     */
+    public function setMessageFactory($messageFactory)
+    {
+        $this->messageFactory = $messageFactory;
     }
 }

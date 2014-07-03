@@ -35,7 +35,11 @@ class MailerAbstractFactory implements AbstractFactoryInterface
 
         /** @var \Detail\Mail\Driver\DriverInterface $driver */
         $driver = $serviceLocator->get($options->getDriver());
-        $mailer = new SimpleMailer($driver);
+
+        /** @var \Detail\Mail\Message\MessageFactoryInterface $messageFactory */
+        $messageFactory = $serviceLocator->get($options->getMessageFactory());
+
+        $mailer = new SimpleMailer($driver, $messageFactory);
 
         return $mailer;
     }

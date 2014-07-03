@@ -17,7 +17,7 @@ final class Id
     public static function create()
     {
         try {
-            $id = Uuid::uuid4();
+            $id = Uuid::uuid4()->toString();
 
         } catch (UnsatisfiedDependencyException $e) {
             // Some dependency was not met. Either the method cannot be called on a
@@ -43,6 +43,6 @@ final class Id
 
     public function __toString()
     {
-        return $this->value;
+        return $this->getValue();
     }
 }

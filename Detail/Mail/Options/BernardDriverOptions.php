@@ -8,6 +8,8 @@ class BernardDriverOptions extends AbstractOptions
 
     protected $producer = 'Bernard\Producer';
 
+    protected $messageFactory = 'Detail\Mail\Message\MessageFactory';
+
     /**
      * @return string
      */
@@ -38,5 +40,21 @@ class BernardDriverOptions extends AbstractOptions
     public function setProducer($producer)
     {
         $this->producer = $producer;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMessageFactory()
+    {
+        return $this->messageFactory;
+    }
+
+    /**
+     * @param string $messageFactory
+     */
+    public function setMessageFactory($messageFactory)
+    {
+        $this->messageFactory = $messageFactory;
     }
 }

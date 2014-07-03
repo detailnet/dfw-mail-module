@@ -1,8 +1,9 @@
 <?php
 
-namespace Detail\Mail\Driver;
+namespace Detail\Mail\Driver\Bernard;
 
-use Detail\Mail\Message\MessageInterface;
+use Detail\Mail\Message\MessageInterface as MailMessage;
+use Detail\Mail\Message\MessageFactoryInterface as MailMessageFactory;
 
 use Bernard\Message as BernardMessage;
 use Bernard\Message\DefaultMessage as BernardDefaultMessage;
@@ -10,8 +11,7 @@ use Bernard\Producer;
 
 use RuntimeException;
 
-class BernardDriver
-    implements DriverInterface
+class BernardService
 {
     const MESSAGE_CLASS_KEY = 'message_class';
     const MESSAGE_KEY = 'message';
@@ -21,55 +21,40 @@ class BernardDriver
      */
     protected $producer;
 
-    protected $queueName = 'mail';
-
     /**
-     * @return string
+     * @var MailMessageFactory
      */
-    public function getQueueName()
-    {
-        return $this->queueName;
-    }
+    protected $messageFactory;
 
-    /**
-     * @param string $queueName
-     */
-    public function setQueueName($queueName)
-    {
-        $this->queueName = $queueName;
-    }
-
-    public function __construct(Producer $producer, $queueName = null)
+    public function __construct(Producer $producer, MailMessageFactory $messageFactory)
     {
         $this->producer = $producer;
-
-        if ($queueName !== null) {
-            $this->setQueueName($queueName);
-        }
+        $this->messageFactory = $messageFactory;
     }
 
     /**
-     * @param MessageInterface $message Message
+     * @param BernardMessage $message Message
      */
-    public function send(MessageInterface $message)
+    public function produce(BernardMessage $message)
     {
-        // Pushes the message to the "mail" queue
-        $this->getProducer()->produce($this->encodeMessage($message));
+        // Pushes the message to the queue
+        $this->getProducer()->produce($message);
     }
 
     /**
      * Encode mail message for Bernard.
      *
-     * @param MessageInterface $message
+     * @param MailMessage $message
+     * @param string $queue
      * @return BernardDefaultMessage
      */
-    public function encodeMessage(MessageInterface $message)
+    public function encodeMessage(MailMessage $message, $queue)
     {
         return new BernardDefaultMessage(
-            $this->getQueueName(),
+            $queue,
             array(
                 self::MESSAGE_CLASS_KEY => get_class($message),
-                self::MESSAGE_KEY => $message->toArray(),
+                self::MESSAGE_KEY => $this->getMessageFactory()->toArray($message),
             )
         );
     }
@@ -78,7 +63,7 @@ class BernardDriver
      * Decode mail message from Bernard.
      *
      * @param BernardMessage $message
-     * @return MessageInterface
+     * @return MailMessage
      * @throws RuntimeException
      */
     public function decodeMessage(BernardMessage $message)
@@ -103,12 +88,10 @@ class BernardDriver
             );
         }
 
-        /** @var MessageInterface $messageClass */
-        $messageClass = $message->{self::MESSAGE_CLASS_KEY};
-
-        /** @todo Check if class really implements MessageInterface (or fromArray is callable) */
-
-        return $messageClass::fromArray($message->{self::MESSAGE_KEY});
+        return $this->getMessageFactory()->createFromArray(
+            $message->{self::MESSAGE_KEY},
+            $message->{self::MESSAGE_CLASS_KEY}
+        );
     }
 
     protected function getProducer()
@@ -116,4 +99,8 @@ class BernardDriver
         return $this->producer;
     }
 
+    protected function getMessageFactory()
+    {
+        return $this->messageFactory;
+    }
 }

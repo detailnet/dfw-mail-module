@@ -4,7 +4,7 @@ namespace Detail\Mail\Message;
 
 interface MessageInterface
 {
-    public static function fromArray(array $message);
+//    public static function fromArray(array $message);
 
     /**
      * @return string
@@ -29,5 +29,5 @@ interface MessageInterface
     /**
      * @return array
      */
-    public function toArray();
+//    public function toArray();
 }
