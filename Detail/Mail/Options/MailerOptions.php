@@ -15,6 +15,11 @@ class MailerOptions extends AbstractOptions
     protected $messageFactory = 'Detail\Mail\Message\MessageFactory';
 
     /**
+     * @var array
+     */
+    protected $listeners = array();
+
+    /**
      * @return string
      */
     public function getDriver()
@@ -44,5 +49,21 @@ class MailerOptions extends AbstractOptions
     public function setMessageFactory($messageFactory)
     {
         $this->messageFactory = $messageFactory;
+    }
+
+    /**
+     * @return array
+     */
+    public function getListeners()
+    {
+        return $this->listeners;
+    }
+
+    /**
+     * @param array $listeners
+     */
+    public function setListeners($listeners)
+    {
+        $this->listeners = $listeners;
     }
 }

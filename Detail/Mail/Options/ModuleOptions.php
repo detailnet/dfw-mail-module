@@ -25,6 +25,11 @@ class ModuleOptions extends AbstractOptions
     protected $messageFactory;
 
     /**
+     * @var array
+     */
+    protected $listeners = array();
+
+    /**
      * @return string
      */
     public function getDefaultMailer()
@@ -51,7 +56,7 @@ class ModuleOptions extends AbstractOptions
     /**
      * @param array $mailers
      */
-    public function setMailers($mailers)
+    public function setMailers(array $mailers)
     {
         $this->mailers = $mailers;
     }
@@ -67,7 +72,7 @@ class ModuleOptions extends AbstractOptions
     /**
      * @param array $drivers
      */
-    public function setDrivers($drivers)
+    public function setDrivers(array $drivers)
     {
         $this->drivers = $drivers;
     }
@@ -90,5 +95,21 @@ class ModuleOptions extends AbstractOptions
     public function setMessageFactory(array $messageFactory)
     {
         $this->messageFactory = new MessageFactoryOptions($messageFactory);
+    }
+
+    /**
+     * @return array
+     */
+    public function getListeners()
+    {
+        return $this->listeners;
+    }
+
+    /**
+     * @param array $listeners
+     */
+    public function setListeners(array $listeners)
+    {
+        $this->listeners = $listeners;
     }
 }

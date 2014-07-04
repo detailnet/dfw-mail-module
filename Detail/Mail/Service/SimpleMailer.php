@@ -45,6 +45,8 @@ class SimpleMailer extends AbstractMailer
      */
     public function send(MessageInterface $message)
     {
+        $this->getEventManager()->trigger(__FUNCTION__ . '.pre', $this, array('message' => $message));
         $this->getDriver()->send($message);
+        $this->getEventManager()->trigger(__FUNCTION__ . '.post', $this, array('message' => $message));
     }
 }

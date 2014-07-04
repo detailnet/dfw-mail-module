@@ -27,19 +27,6 @@ class Message
      */
     protected $variables = array();
 
-//    public static function fromArray(array $message)
-//    {
-//        var_dump($message);
-//        exit;
-//
-//        return new static(
-//            $message['id'],
-//            $message['name'],
-//            $message['headers'],
-//            $message['variables']
-//        );
-//    }
-
     /**
      * @return Id
      */
@@ -114,17 +101,4 @@ class Message
         $this->setHeaders($headers);
         $this->setVariables($variables);
     }
-
-    /**
-     * @return array
-     */
-//    public function toArray()
-//    {
-//        return array(
-//            'id' => $this->getId()->getValue(),
-//            'name' => $this->getName(),
-//            'headers' => $this->getHeaders(),
-//            'variables' => $this->getVariables()
-//        );
-//    }
 }
