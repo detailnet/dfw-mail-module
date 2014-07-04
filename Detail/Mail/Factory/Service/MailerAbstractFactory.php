@@ -39,11 +39,12 @@ class MailerAbstractFactory implements AbstractFactoryInterface
         /** @var \Detail\Mail\Message\MessageFactoryInterface $messageFactory */
         $messageFactory = $serviceLocator->get($options->getMessageFactory());
 
-        $mailer = new SimpleMailer($driver, $messageFactory);
+        $mailer = new SimpleMailer($requestedName, $messageFactory, $driver);
 
-        foreach ($options->getListeners() as $listener) {
-            /** @var \Zend\EventManager\ListenerAggregateInterface $listener */
-            $listener = $serviceLocator->get($listener);
+        foreach ($options->getListeners() as $listenerId) {
+            /** @var \Detail\Mail\Listener\ListenerInterface $listener */
+            $listener = $serviceLocator->get($listenerId); // Fetches new instance each time (not shared)
+            $listener->setMailerId($requestedName);
             $listener->attach($mailer->getEventManager());
         }
 

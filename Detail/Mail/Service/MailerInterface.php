@@ -7,6 +7,11 @@ use Detail\Mail\Message\MessageInterface;
 interface MailerInterface
 {
     /**
+     * @return string
+     */
+    public function getId();
+
+    /**
      * @return \Detail\Mail\Message\MessageFactoryInterface
      */
     public function getMessageFactory();

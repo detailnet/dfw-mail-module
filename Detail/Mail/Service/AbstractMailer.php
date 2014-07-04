@@ -15,9 +15,22 @@ abstract class AbstractMailer implements
     use EventManagerAwareTrait;
 
     /**
+     * @var string
+     */
+    protected $id;
+
+    /**
      * @var MessageFactoryInterface
      */
     protected $messageFactory;
+
+    /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * @return MessageFactoryInterface
@@ -36,10 +49,13 @@ abstract class AbstractMailer implements
     }
 
     /**
+     * @param string $id
      * @param MessageFactoryInterface $messageFactory
      */
-    public function __construct(MessageFactoryInterface $messageFactory)
+    public function __construct($id, MessageFactoryInterface $messageFactory)
     {
+        $this->id = $id;
+        $this->eventIdentifier = $id;
         $this->setMessageFactory($messageFactory);
     }
 

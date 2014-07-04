@@ -30,12 +30,13 @@ class SimpleMailer extends AbstractMailer
     }
 
     /**
-     * @param DriverInterface $driver
+     * @param string
      * @param MessageFactoryInterface $messageFactory
+     * @param DriverInterface $driver
      */
-    public function __construct(DriverInterface $driver, MessageFactoryInterface $messageFactory)
+    public function __construct($id, MessageFactoryInterface $messageFactory, DriverInterface $driver)
     {
-        parent::__construct($messageFactory);
+        parent::__construct($id, $messageFactory);
 
         $this->setDriver($driver);
     }

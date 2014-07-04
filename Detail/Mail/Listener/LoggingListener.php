@@ -2,31 +2,32 @@
 
 namespace Detail\Mail\Listener;
 
-use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\EventInterface;
 
-use Psr\Log\LoggerAwareInterface;
 
-use Detail\Log\Service\LoggerAwareTrait;
 
 use Detail\Mail\Message\MessageInterface;
 use Detail\Mail\Service\SimpleMailer;
 
 use RuntimeException;
 
-class LoggingListener extends AbstractListenerAggregate
-    implements LoggerAwareInterface
+class LoggingListener extends AbstractListener
 {
-    use LoggerAwareTrait;
-
     /**
      * {@inheritDoc}
      */
     public function attach(EventManagerInterface $events)
     {
-        $this->attachEvent($events, 'Detail\Mail\Service\SimpleMailer', 'send.pre', 'onBeforeSimpleMailerSend');
-        $this->attachEvent($events, 'Detail\Mail\Service\SimpleMailer', 'send.post', 'onAfterSimpleMailerSend');
+        /** @todo Move mailer ID assertion to AbstractListener */
+        $mailerId = $this->getMailerId();
+
+        if (!$mailerId) {
+            throw new RuntimeException('No mailer ID set');
+        }
+
+        $this->attachEvent($events, $mailerId, 'send.pre', 'onBeforeSimpleMailerSend');
+        $this->attachEvent($events, $mailerId, 'send.post', 'onAfterSimpleMailerSend');
     }
 
     public function onBeforeSimpleMailerSend(EventInterface $e)
@@ -65,23 +66,25 @@ class LoggingListener extends AbstractListenerAggregate
 
             switch ($driverClass) {
                 case 'Detail\Mail\Driver\Bernard\BernardDriver':
-                    $text = 'Queued email message "%s" (headers: "%s", driver: %s)';
+                    $text = 'Queued email message "%s" of type "%s" (headers: "%s", driver: %s)';
                     break;
                 default:
-                    $text = 'Sent email message "%s" (headers: "%s", driver: %s)';
+                    $text = 'Sent email message "%s" of type "%s" (headers: "%s", driver: %s)';
                     break;
             }
 
             $text = sprintf(
                 $text,
                 $message->getId(),
+                $message->getName(),
                 $headersText,
                 $driverClass
             );
         } else {
             $text = sprintf(
-                'Sent email message "%s" (headers: "%s")',
+                'Sent email message "%s" of type "%s" (headers: "%s")',
                 $message->getId(),
+                $message->getName(),
                 $headersText
             );
         }
