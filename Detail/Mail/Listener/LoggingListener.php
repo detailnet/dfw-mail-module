@@ -6,8 +6,20 @@ use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\EventInterface;
 
+use Psr\Log\LoggerAwareInterface;
+
+use Detail\Log\Service\LoggerAwareTrait;
+
+use Detail\Mail\Message\MessageInterface;
+use Detail\Mail\Service\SimpleMailer;
+
+use RuntimeException;
+
 class LoggingListener extends AbstractListenerAggregate
+    implements LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     /**
      * {@inheritDoc}
      */
@@ -19,12 +31,62 @@ class LoggingListener extends AbstractListenerAggregate
 
     public function onBeforeSimpleMailerSend(EventInterface $e)
     {
-//        var_dump('send.pre', $e);
     }
 
     public function onAfterSimpleMailerSend(EventInterface $e)
     {
-//        var_dump('send.post', $e);
+        /** @var \Detail\Mail\Service\MailerInterface $mailer */
+        $mailer = $e->getTarget();
+        $message = $e->getParam('message');
+
+        if ($message === null) {
+            throw new RuntimeException(
+                sprintf('Event "%s" is missing param "message"', $e->getName())
+            );
+        } else if (!$message instanceof MessageInterface) {
+            throw new RuntimeException(
+                sprintf(
+                    'Event "%s" has invalid value for param "message"; ' .
+                    'expected Detail\Mail\Message\MessageInterface object but got ' .
+                    is_object($message) ? get_class($message) : gettype($message),
+                    $e->getName()
+                )
+            );
+        }
+
+        $headersText = preg_replace(
+            '/\s+/', ' ',
+            str_replace(PHP_EOL, ' ', var_export($message->getHeaders(), true))
+        );
+
+        if ($mailer instanceof SimpleMailer) {
+            /** @var \Detail\Mail\Service\SimpleMailer $mailer */
+            $driverClass = get_class($mailer->getDriver());
+
+            switch ($driverClass) {
+                case 'Detail\Mail\Driver\Bernard\BernardDriver':
+                    $text = 'Queued email message "%s" (headers: "%s", driver: %s)';
+                    break;
+                default:
+                    $text = 'Sent email message "%s" (headers: "%s", driver: %s)';
+                    break;
+            }
+
+            $text = sprintf(
+                $text,
+                $message->getId(),
+                $headersText,
+                $driverClass
+            );
+        } else {
+            $text = sprintf(
+                'Sent email message "%s" (headers: "%s")',
+                $message->getId(),
+                $headersText
+            );
+        }
+
+        $this->log($text);
     }
 
     /**
