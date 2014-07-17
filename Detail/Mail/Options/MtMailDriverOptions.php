@@ -2,6 +2,8 @@
 
 namespace Detail\Mail\Options;
 
+use Detail\Core\Options\AbstractOptions;
+
 class MtMailDriverOptions extends AbstractOptions
 {
     protected $templatePath = 'mail';
