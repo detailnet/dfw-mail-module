@@ -75,7 +75,7 @@ class MessageFactory
             self::KEY_ID        => (string) $message->getId(),
             self::KEY_NAME      => $message->getName(),
             self::KEY_HEADERS   => $message->getHeaders(),
-            self::KEY_VARIABLES => $message->getVariables()
+            self::KEY_VARIABLES => $message->getVariables(),
         );
     }
 }

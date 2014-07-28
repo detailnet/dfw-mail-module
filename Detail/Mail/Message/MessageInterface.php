@@ -6,7 +6,7 @@ interface MessageInterface
 {
 //    public static function fromArray(array $message);
 
-    /** @todo Need to define constructor/factory. Bound in MessageFactory::createNew() */
+    /** @todo Need to define constructor. Bound in MessageFactory */
 
     /**
      * @return string
