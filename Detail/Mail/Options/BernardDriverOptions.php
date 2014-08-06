@@ -6,11 +6,31 @@ use Detail\Core\Options\AbstractOptions;
 
 class BernardDriverOptions extends AbstractOptions
 {
+    /**
+     * @var string
+     */
+    protected $messenger;
+
+    /**
+     * @var string
+     */
     protected $queueName = 'mail';
 
-    protected $producer = 'Bernard\Producer';
+    /**
+     * @return string
+     */
+    public function getMessenger()
+    {
+        return $this->messenger;
+    }
 
-    protected $messageFactory = 'Detail\Mail\Message\MessageFactory';
+    /**
+     * @param string $messenger
+     */
+    public function setMessenger($messenger)
+    {
+        $this->messenger = $messenger;
+    }
 
     /**
      * @return string
@@ -26,37 +46,5 @@ class BernardDriverOptions extends AbstractOptions
     public function setQueueName($queueName)
     {
         $this->queueName = $queueName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getProducer()
-    {
-        return $this->producer;
-    }
-
-    /**
-     * @param string $producer
-     */
-    public function setProducer($producer)
-    {
-        $this->producer = $producer;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMessageFactory()
-    {
-        return $this->messageFactory;
-    }
-
-    /**
-     * @param string $messageFactory
-     */
-    public function setMessageFactory($messageFactory)
-    {
-        $this->messageFactory = $messageFactory;
     }
 }

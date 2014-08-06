@@ -18,10 +18,10 @@ class BernardDriverFactory implements FactoryInterface
         /** @var \Detail\Mail\Options\BernardDriverOptions $options */
         $options = $serviceLocator->get('Detail\Mail\Options\BernardDriverOptions');
 
-        /** @var \Detail\Mail\Driver\Bernard\BernardService $bernardService */
-        $bernardService = $serviceLocator->get('Detail\Mail\Driver\Bernard\BernardService');
+        /** @var \Detail\Bernard\Message\Messenger $messenger */
+        $messenger = $serviceLocator->get($options->getMessenger());
 
-        $driver = new BernardDriver($bernardService);
+        $driver = new BernardDriver($messenger);
         $driver->setQueueName($options->getQueueName());
 
         return $driver;

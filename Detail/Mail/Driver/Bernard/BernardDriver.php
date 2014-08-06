@@ -2,6 +2,7 @@
 
 namespace Detail\Mail\Driver\Bernard;
 
+use Detail\Bernard\Message\Messenger;
 use Detail\Mail\Driver\DriverInterface;
 use Detail\Mail\Message\MessageInterface;
 
@@ -9,11 +10,30 @@ class BernardDriver
     implements DriverInterface
 {
     /**
-     * @var BernardService
+     * @var Messenger
      */
-    protected $bernardService;
+    protected $messenger;
 
+    /**
+     * @var string
+     */
     protected $queueName = 'mail';
+
+    /**
+     * @return Messenger
+     */
+    public function getMessenger()
+    {
+        return $this->messenger;
+    }
+
+    /**
+     * @param Messenger $messenger
+     */
+    public function setMessenger(Messenger $messenger)
+    {
+        $this->messenger = $messenger;
+    }
 
     /**
      * @return string
@@ -31,9 +51,9 @@ class BernardDriver
         $this->queueName = $queueName;
     }
 
-    public function __construct(BernardService $bernardService, $queueName = null)
+    public function __construct(Messenger $messenger, $queueName = null)
     {
-        $this->bernardService = $bernardService;
+        $this->setMessenger($messenger);
 
         if ($queueName !== null) {
             $this->setQueueName($queueName);
@@ -45,13 +65,8 @@ class BernardDriver
      */
     public function send(MessageInterface $message)
     {
-        $bernardService = $this->getBernardService();
-        $bernardMessage = $bernardService->encodeMessage($message, $this->getQueueName());
-        $bernardService->produce($bernardMessage);
-    }
-
-    protected function getBernardService()
-    {
-        return $this->bernardService;
+        $messenger = $this->getMessenger();
+        $bernardMessage = $messenger->encodeMessage($message, $this->getQueueName());
+        $messenger->produce($bernardMessage);
     }
 }
