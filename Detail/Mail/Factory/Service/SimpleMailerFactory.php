@@ -50,6 +50,14 @@ class SimpleMailerFactory implements
 
         $mailer = new Mailer($id, $messageFactory, $driver);
 
+        // We're injecting the event manager by ourselves, since the mailer does not implement
+        // EventManagerAwareInterface anymore (it would break lazy loading when the event manager
+        // would be injected through Zend's initializer (se Zend\Mvc\Service\ServiceManagerConfig).
+        /** @todo Find way to implement EventManagerAwareInterface */
+        /** @var \Zend\EventManager\EventManagerInterface $eventManager */
+        $eventManager = $serviceLocator->get('EventManager');
+        $mailer->setEventManager($eventManager);
+
         foreach ($mailerOptions->getListeners() as $listenerId) {
             /** @var \Detail\Mail\Listener\ListenerInterface $listener */
             $listener = $serviceLocator->get($listenerId); // Fetches new instance each time (not shared)

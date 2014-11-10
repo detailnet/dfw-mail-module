@@ -9,8 +9,8 @@ use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerAwareTrait;
 
 abstract class AbstractMailer implements
-    MailerInterface,
-    EventManagerAwareInterface
+    MailerInterface
+//    EventManagerAwareInterface
 {
     use EventManagerAwareTrait;
 

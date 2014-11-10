@@ -25,6 +25,7 @@ class MailerInitializer implements InitializerInterface
 
             /** @var MailerInterface $mailer */
             $mailer = $serviceLocator->get($options->getDefaultMailer());
+
             $instance->setMailer($mailer);
         }
     }
