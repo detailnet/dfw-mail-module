@@ -5,7 +5,6 @@ namespace Detail\Mail\Factory\Service;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\LazyLoadingInterface;
 
 use Detail\Mail\Exception\ConfigException;
@@ -62,7 +61,8 @@ class MailerAbstractFactory implements AbstractFactoryInterface
         }
 
         if ($mailer->getUseProxy()) {
-            $lazyLoadingFactory = new LazyLoadingValueHolderFactory();
+            /** @var \ProxyManager\Factory\LazyLoadingValueHolderFactory $lazyLoadingFactory */
+            $lazyLoadingFactory = $serviceLocator->get('ProxyManager\Factory\LazyLoadingValueHolderFactory');
             $initializer = function (& $wrappedObject, LazyLoadingInterface $proxy, $method, array $parameters, & $initializer) use (
                 $factory, $serviceLocator, $requestedName, $mailer
             ) {
