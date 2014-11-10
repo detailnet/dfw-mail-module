@@ -5,8 +5,11 @@ namespace Detail\Mail\Factory\Service;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
+use ProxyManager\Factory\LazyLoadingValueHolderFactory;
+use ProxyManager\Proxy\LazyLoadingInterface;
+
+use Detail\Mail\Exception\ConfigException;
 use Detail\Mail\Options\MailerOptions;
-use Detail\Mail\Service\SimpleMailer;
 
 class MailerAbstractFactory implements AbstractFactoryInterface
 {
@@ -30,25 +33,49 @@ class MailerAbstractFactory implements AbstractFactoryInterface
      */
     public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
-        $mailers = $this->getOptions($serviceLocator)->getMailers();
-        $options = new MailerOptions($mailers[$requestedName]);
+        $moduleOptions = $this->getOptions($serviceLocator);
 
-        /** @var \Detail\Mail\Driver\DriverInterface $driver */
-        $driver = $serviceLocator->get($options->getDriver());
+        $mailers = $moduleOptions->getMailers();
+        $mailer = new MailerOptions($mailers[$requestedName]);
 
-        /** @var \Detail\Mail\Message\MessageFactoryInterface $messageFactory */
-        $messageFactory = $serviceLocator->get($options->getMessageFactory());
+        $factories = $moduleOptions->getMailerFactories();
 
-        $mailer = new SimpleMailer($requestedName, $messageFactory, $driver);
-
-        foreach ($options->getListeners() as $listenerId) {
-            /** @var \Detail\Mail\Listener\ListenerInterface $listener */
-            $listener = $serviceLocator->get($listenerId); // Fetches new instance each time (not shared)
-            $listener->setMailerId($requestedName);
-            $listener->attach($mailer->getEventManager());
+        if (!isset($factories[$mailer->getType()])) {
+            throw new ConfigException(
+                sprintf('No factory configured for mailer type "%s"', $mailer->getType())
+            );
         }
 
-        return $mailer;
+        $factoryClass = $factories[$mailer->getType()];
+        $factory = $serviceLocator->get($factoryClass);
+
+        if (!$factory instanceof MailerFactoryInterface) {
+            throw new ConfigException(
+                sprintf(
+                    'Invalid factory class "%s" configured for repository type "%s";' .
+                    'Expected Detail\Mail\Factory\Service\MailerFactoryInterface object; received "%s"',
+                    $factoryClass,
+                    $mailer->getType(),
+                    (is_object($factory) ? get_class($factory) : gettype($factory))
+                )
+            );
+        }
+
+        if ($mailer->getUseProxy()) {
+            $lazyLoadingFactory = new LazyLoadingValueHolderFactory();
+            $initializer = function (& $wrappedObject, LazyLoadingInterface $proxy, $method, array $parameters, & $initializer) use (
+                $factory, $serviceLocator, $requestedName, $mailer
+            ) {
+                $initializer   = null; // disable initialization
+                $wrappedObject = $factory->createMailer($serviceLocator, $requestedName, $mailer->getOptions());
+
+                return true; // confirm that initialization occurred correctly
+            };
+
+            return $lazyLoadingFactory->createProxy($factory->getMailerClass(), $initializer);
+        } else {
+            return $factory->createMailer($serviceLocator, $name, $mailer->getOptions());
+        }
     }
 
     /**

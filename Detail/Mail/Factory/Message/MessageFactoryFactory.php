@@ -18,9 +18,9 @@ class MessageFactoryFactory implements FactoryInterface
         /** @var \Detail\Mail\Options\ModuleOptions $options */
         $options = $serviceLocator->get('Detail\Mail\Options\ModuleOptions');
 
-        $driver = new MessageFactory();
-        $driver->setMessageClass($options->getMessageFactory()->getMessageClass());
+        $factory = new MessageFactory();
+        $factory->setMessageClass($options->getMessageFactory()->getMessageClass());
 
-        return $driver;
+        return $factory;
     }
 }

@@ -22,6 +22,11 @@ class ModuleOptions extends AbstractOptions
     protected $drivers = array();
 
     /**
+     * @var array
+     */
+    protected $mailerFactories = array();
+
+    /**
      * @var MessageFactoryOptions
      */
     protected $messageFactory;
@@ -77,6 +82,22 @@ class ModuleOptions extends AbstractOptions
     public function setDrivers(array $drivers)
     {
         $this->drivers = $drivers;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMailerFactories()
+    {
+        return $this->mailerFactories;
+    }
+
+    /**
+     * @param array $mailerFactories
+     */
+    public function setMailerFactories(array $mailerFactories)
+    {
+        $this->mailerFactories = $mailerFactories;
     }
 
     /**

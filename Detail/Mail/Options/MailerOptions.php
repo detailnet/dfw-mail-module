@@ -3,69 +3,30 @@
 namespace Detail\Mail\Options;
 
 use Detail\Core\Options\AbstractOptions;
+use Detail\Core\Options\TypeAwareOptionsTrait;
 
 class MailerOptions extends AbstractOptions
 {
-    /**
-     * @var string
-     */
-    protected $driver = 'Detail\Mail\Driver\MtMailDriver';
+    use TypeAwareOptionsTrait;
 
     /**
-     * @var string
+     * @var boolean
      */
-    protected $messageFactory = 'Detail\Mail\Message\MessageFactory';
+    protected $useProxy = false;
 
     /**
-     * @var array
+     * @return boolean
      */
-    protected $listeners = array();
-
-    /**
-     * @return string
-     */
-    public function getDriver()
+    public function getUseProxy()
     {
-        return $this->driver;
+        return $this->useProxy;
     }
 
     /**
-     * @param string $driver
+     * @param boolean $useProxy
      */
-    public function setDriver($driver)
+    public function setUseProxy($useProxy)
     {
-        $this->driver = $driver;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMessageFactory()
-    {
-        return $this->messageFactory;
-    }
-
-    /**
-     * @param string $messageFactory
-     */
-    public function setMessageFactory($messageFactory)
-    {
-        $this->messageFactory = $messageFactory;
-    }
-
-    /**
-     * @return array
-     */
-    public function getListeners()
-    {
-        return $this->listeners;
-    }
-
-    /**
-     * @param array $listeners
-     */
-    public function setListeners($listeners)
-    {
-        $this->listeners = $listeners;
+        $this->useProxy = $useProxy;
     }
 }
