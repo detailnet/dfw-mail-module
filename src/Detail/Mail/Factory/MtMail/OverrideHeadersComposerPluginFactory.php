@@ -4,6 +4,7 @@ namespace Detail\Mail\Factory\MtMail;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
 
 use Detail\Mail\MtMail\OverrideHeadersComposerPlugin;
 
@@ -17,7 +18,11 @@ class OverrideHeadersComposerPluginFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->getServiceLocator()->get('Configuration');
+        if ($serviceLocator instanceof ServiceLocatorAwareInterface) {
+            $serviceLocator = $serviceLocator->getServiceLocator();
+        }
+
+        $config = $serviceLocator->get('Configuration');
         $plugin = new OverrideHeadersComposerPlugin();
 
         if (isset($config['mt_mail']['override_headers'])) {
