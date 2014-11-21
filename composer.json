@@ -19,14 +19,15 @@
     ],
     "require": {
         "php": ">=5.3.3",
+        "psr/log": "~1.0",
         "ocramius/proxy-manager": "~0.5",
         "zendframework/zend-loader": "2.*",
         "zendframework/zend-modulemanager": "2.*",
         "zendframework/zend-mvc": "2.*",
         "zendframework/zend-servicemanager": "2.*",
-        "detailnet/bernard-module": "dev-master",
         "detailnet/dfw-core": "dev-master",
         "detailnet/dfw-log": "dev-master",
+        "detailnet/dfw-bernard": "dev-master",
         "detailnet/dfw-mail": "dev-master"
     },
     "require-dev": {
