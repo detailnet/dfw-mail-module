@@ -25,10 +25,8 @@
         "zendframework/zend-modulemanager": "2.*",
         "zendframework/zend-mvc": "2.*",
         "zendframework/zend-servicemanager": "2.*",
-        "detailnet/bernard-module": "dev-master",
-        "detailnet/dfw-core": "dev-master",
-        "detailnet/dfw-log": "dev-master",
-        "detailnet/dfw-mail": "dev-master"
+        "detailnet/dfw-core": "0.1.1",
+        "detailnet/dfw-mail": "0.1.1"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.3.5"
