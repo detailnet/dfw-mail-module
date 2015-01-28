@@ -12,14 +12,14 @@ class ModuleOptionsFactoryTest extends TestCase
 {
     public function testCreateService()
     {
-        $moduleOptions = $this->createModuleOptions(array('bernard' => array()));
+        $moduleOptions = $this->createModuleOptions(array('detail_mail' => array()));
 
         $this->assertInstanceOf('Detail\Mail\Options\ModuleOptions', $moduleOptions);
     }
 
     public function testCreateServiceThrowsExceptionForInvalidConfiguration()
     {
-        $this->setExpectedException('Detail\Bernard\Exception\ConfigException');
+        $this->setExpectedException('Detail\Mail\Exception\ConfigException');
         $this->createModuleOptions();
     }
 

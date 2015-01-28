@@ -5,9 +5,8 @@ namespace Detail\Mail\Factory\Options;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
+use Detail\Mail\Exception\ConfigException;
 use Detail\Mail\Options\BernardDriverOptions;
-
-use RuntimeException;
 
 class BernardDriverOptionsFactory implements FactoryInterface
 {
@@ -22,7 +21,7 @@ class BernardDriverOptionsFactory implements FactoryInterface
         $drivers = $options->getDrivers();
 
         if (!isset($drivers['bernard'])) {
-            throw new RuntimeException('Config for driver Detail\Mail\Driver\BernardDriver is not set');
+            throw new ConfigException('Config for driver Detail\Mail\Driver\BernardDriver is not set');
         }
 
         return new BernardDriverOptions($drivers['bernard']);

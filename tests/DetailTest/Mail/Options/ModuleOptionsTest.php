@@ -12,7 +12,7 @@ class ModuleOptionsTest extends OptionsTestCase
     protected function setUp()
     {
         $this->options = $this->getOptions(
-            'Detail\Bernard\Mail\ModuleOptions',
+            'Detail\Mail\Options\ModuleOptions',
             array(
                 'getDefaultMailer',
                 'setDefaultMailer',

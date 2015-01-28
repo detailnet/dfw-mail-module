@@ -63,8 +63,17 @@ class MailerAbstractFactory implements AbstractFactoryInterface
         if ($mailer->getUseProxy()) {
             /** @var \ProxyManager\Factory\LazyLoadingValueHolderFactory $lazyLoadingFactory */
             $lazyLoadingFactory = $serviceLocator->get('ProxyManager\Factory\LazyLoadingValueHolderFactory');
-            $initializer = function (& $wrappedObject, LazyLoadingInterface $proxy, $method, array $parameters, & $initializer) use (
-                $factory, $serviceLocator, $requestedName, $mailer
+            $initializer = function (
+                &$wrappedObject,
+                LazyLoadingInterface $proxy,
+                $method,
+                array $parameters,
+                &$initializer
+            ) use (
+                $factory,
+                $serviceLocator,
+                $requestedName,
+                $mailer
             ) {
                 $initializer   = null; // disable initialization
                 $wrappedObject = $factory->createMailer($serviceLocator, $requestedName, $mailer->getOptions());
